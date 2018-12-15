@@ -13,10 +13,8 @@ ExportedObj/
 obj/
 .consulo/
 *.csproj
-/*.csproj
 *.unityproj
 *.sln
-/*.sln
 *.suo
 *.tmp
 *.user
