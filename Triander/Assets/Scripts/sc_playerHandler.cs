@@ -20,15 +20,17 @@ public class sc_playerHandler : MonoBehaviour
     //jump
     public float jumpSpeed;
 
-    //powers (jump, side-boost, air-up, air-side, blink, hover, pause, points)
+    //powers (jump, side-boost, up-boost, blink, hover, freeze, lasers, budget) { x: presence of power, y: charges left }
     public int[,] powers = new int[,] { { 0, 0 }, { 0, 0 }, { 0, 0}, { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 5 } };
     public float powerCD = 0;
+    public bool powerCheck = false;
 
     // Use this for initialization
     void Start()
     {
         //get the rigid body component for later use
         rb = GetComponent<Rigidbody>();
+
         //listens for power collisions
         Messenger.AddListener<int[]>("power collision", powerCollision);
         Messenger.MarkAsPermanent("power collision");
@@ -58,7 +60,7 @@ public class sc_playerHandler : MonoBehaviour
         float t = Time.deltaTime;
 
         float hAxis = Input.GetAxis("Horizontal"); //x
-        float vAxis = Input.GetAxis("Vertical"); //y     
+        float vAxis = Input.GetAxis("Vertical"); //z     
 
         //stop if absolutely no input
         if (hAxis == 0 && vAxis == 0)
@@ -138,7 +140,7 @@ public class sc_playerHandler : MonoBehaviour
         {  
             powers[a0[0], 0] = 1;
             powers[a0[0], 1] += a0[1];
-              
+            powers[7, 1]  += a0[2];
             Messenger.Broadcast("power collected");
         }
     }
@@ -156,8 +158,7 @@ public class sc_playerHandler : MonoBehaviour
 
         //1 : Side-boost
         if (Input.GetKeyDown(KeyCode.Alpha1) && (powers[1, 0]*powers[1, 1]) >= 1 && powerCD <= 0)
-        {
-            
+        {            
             velocity.x = velocity.x * 2;
             velocity.z = velocity.z * 2;
 
@@ -168,6 +169,7 @@ public class sc_playerHandler : MonoBehaviour
         //2 : Up-boost
         if (Input.GetKeyDown(KeyCode.Alpha2) && (powers[2, 0] * powers[2, 1]) >= 1 && powerCD <= 0)
         {
+            rb.velocity.Set(rb.velocity.x, 0, rb.velocity.z);
             rb.velocity += transform.rotation * new Vector3(0, jumpSpeed, 0);
             powers[2, 1] -= 1;
             powerCD += 2;
