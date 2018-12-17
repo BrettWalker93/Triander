@@ -6,7 +6,7 @@ using UnityEngine;
 * --rotate player with camera
 * tidy up
 */
-public class sc_cameraController : MonoBehaviour
+public class CameraController : MonoBehaviour
 {
     public Transform target;
     public Transform camTransform;
@@ -26,12 +26,12 @@ public class sc_cameraController : MonoBehaviour
     //holds mouse position
     private Vector3 mouseS = new Vector3(0,0,0);
 
-    private void Start()
+    void Start()
     {
         //nothing doing
     }
 
-    private void Update()
+    void Update()
     {
         if (Input.GetMouseButton(1) && !rocheck)
         { 
@@ -44,16 +44,16 @@ public class sc_cameraController : MonoBehaviour
         }
     }
 
-    private void LateUpdate()
+    void LateUpdate()
     {
-        rotateUpdate();
+        RotateUpdate();
         //applies rotations
         transform.position = target.position + rot * new Vector3(0,0,-distance);
         transform.LookAt(target.position);
         target.transform.rotation = Quaternion.Euler(target.transform.rotation.x,playerRot,target.transform.rotation.z);
     }
 
-    private void rotateUpdate()
+    void RotateUpdate()
     {
         if (!Input.GetMouseButton(1))
             rocheck = false;
@@ -65,6 +65,16 @@ public class sc_cameraController : MonoBehaviour
             rot = Quaternion.Euler(Mathf.Clamp(n0,5,85),n1, 0);
             playerRot = n1;
         }      
+    }
+
+    public float SendX()
+    {
+        return transform.eulerAngles.x;
+    }
+    
+    public float SendY()
+    {
+        return transform.eulerAngles.y;
     }
 }
 
