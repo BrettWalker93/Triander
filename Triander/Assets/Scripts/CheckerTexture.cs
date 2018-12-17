@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class sc_checkerTexture : MonoBehaviour {
+public class CheckerTexture : MonoBehaviour {
 
     public Texture2D mainTexture;
 
@@ -12,8 +12,8 @@ public class sc_checkerTexture : MonoBehaviour {
     // Use this for initialization
     void Start () 
     {
-        setMainTextureSize();
-        createPattern();
+        SetMainTextureSize();
+        CreatePattern();
     }
 	
 	// Update is called once per frame
@@ -21,12 +21,12 @@ public class sc_checkerTexture : MonoBehaviour {
     {		
 	}
 
-    void setMainTextureSize()
+    void SetMainTextureSize()
     {
         mainTexture = new Texture2D(mainTexWidth, mainTexHeight);
     }
 
-    void createPattern()
+    void CreatePattern()
     {
         for (int i = 0; i < mainTexWidth; i++)
         {

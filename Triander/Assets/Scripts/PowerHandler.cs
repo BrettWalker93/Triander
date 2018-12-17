@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 //** -> add animation calls
-public class sc_powerHandler : MonoBehaviour
+public class PowerHandler : MonoBehaviour
 {       
     //vars = { type, charges, budget cost }
     public int[] vars = new int[3];

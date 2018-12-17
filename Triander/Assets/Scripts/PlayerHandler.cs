@@ -4,26 +4,38 @@ using UnityEngine;
 /* to do
 * tweak numbers
 * implement more powers
-* **falling through floor
+* cycle through indicators (rehaul)
 */
-public class sc_playerHandler : MonoBehaviour
+public class PlayerHandler : MonoBehaviour
 {
     //initialize
     
     //variables for player movement
-    private Vector3 velocity = new Vector3(0, 0, 0); //for XZ velocity updates
-    private float magnitude = 0;
+    private Vector3 velocity = new Vector3(0, 0, 0); //for x & z velocity updates
+    private float magnitude = 0; //holds magnitude of x & z velocity vectors
     Rigidbody rb;
     public float maxSpeed; //maximum speed
     public float a; //acceleration
+    public float jumpSpeed; //jump speed
     
-    //jump
-    public float jumpSpeed;
 
-    //powers (jump, side-boost, up-boost, blink, hover, freeze, lasers, budget) { x: presence of power, y: charges left }
-    public int[,] powers = new int[,] { { 0, 0 }, { 0, 0 }, { 0, 0}, { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 5 } };
-    public float powerCD = 0;
-    public bool powerCheck = false;
+    //powers (jump, side-boost, up-boost, blink, hover, freeze, lasers, budget) { x: presence of power, y: charges left | budget: spent, total}
+    private int[,] powers = new int[,] { { 0, 0 }, { 0, 0 }, { 0, 0}, { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 5 } };
+    private float[] powerCD = new float[] {0, 0, 0, 0, 0, 0};
+
+    public float blinkD; //blink distance
+    public Transform shadow;
+
+    
+
+    //holds keybinds
+    private string[] binds = new string[7];
+
+    private void Awake()
+    {   
+        //refresh binds    
+        LoadBinds();
+    }
 
     // Use this for initialization
     void Start()
@@ -32,26 +44,37 @@ public class sc_playerHandler : MonoBehaviour
         rb = GetComponent<Rigidbody>();
 
         //listens for power collisions
-        Messenger.AddListener<int[]>("power collision", powerCollision);
+        Messenger.AddListener<int[]>("power collision", PowerCollision);
         Messenger.MarkAsPermanent("power collision");
-    }
-
-    private void FixedUpdate()
-    {
     }
 
     // Update is called once per frame
     void Update()
     {
-        velocityUpdate();  
+        VelocityUpdate();  
 
-        powerUse();
-
-        if (powerCD > 0)
-            powerCD -= Time.deltaTime;
+        PowerUse();
+        
+        //cooldown timer
+        for(int i = 0; i < powerCD.Length; i++)
+        { 
+            if (powerCD[i] > 0)
+                powerCD[i] -= Time.deltaTime;
+        }
+            
+        //print test
+        print(transform.eulerAngles.y + "yes");
     }
 
-    private void velocityUpdate()
+    //updates binds; call if binds are changed in InputHandler
+    public void LoadBinds()
+    {
+        InputHandler inputHandler = GetComponent<InputHandler>();
+        inputHandler.powerBinds.CopyTo(binds, 0);
+    }
+    
+    //updates player velocity based on input
+    void VelocityUpdate()
     {
 
         //Speed updates
@@ -102,7 +125,7 @@ public class sc_playerHandler : MonoBehaviour
         //allow turning at maxSpeed
         if (hAxis != 0 && vAxis != 0)
         {
-            //float diff = 0;
+
             //if horizontal instantaneous speed is greater than vertical instantaneous speed
             if (Mathf.Abs(velocity.x) > Mathf.Abs(velocity.z))
             {
@@ -133,7 +156,7 @@ public class sc_playerHandler : MonoBehaviour
     }
 
     //input is budget cost of power, returns true if room in budget for new power
-    private void powerCollision(int[] a0)
+    void PowerCollision(int[] a0)
     {
         //if room in budget, collect power and destroy pick-up
         if(powers[7, 0] + a0[2] <= powers[7, 1])
@@ -145,34 +168,101 @@ public class sc_playerHandler : MonoBehaviour
         }
     }
     
-    private void powerUse()
-    {
-        //Space : Jump
-        if (Input.GetKeyDown(KeyCode.Space) &&  powers[0,0] == 1)
-        {
-            RaycastHit hit;
-            Ray ray = new Ray(transform.position, Vector3.down);
-            if (Physics.Raycast(ray, out hit, 0.55f))
-                rb.velocity += transform.rotation * new Vector3(0, jumpSpeed, 0);            
-        }
+    //checks for input and uses powers if appropriate
+    void PowerUse()
+    {   
+        //Jump
+        if (Input.GetKeyDown(binds[0]) &&  powers[0,0] == 1)
+            Jump();
 
-        //1 : Side-boost
-        if (Input.GetKeyDown(KeyCode.Alpha1) && (powers[1, 0]*powers[1, 1]) >= 1 && powerCD <= 0)
-        {            
-            velocity.x = velocity.x * 2;
-            velocity.z = velocity.z * 2;
+        //Side-boost
+        if (Input.GetKeyDown(binds[1]) && (powers[1, 0]*powers[1, 1]) >= 1 && powerCD[0] <= 0)
+            SideBoost();
 
-            powers[1,1] -= 1;
-            powerCD += 2;
-        }
+        //Up-boost
+        if (Input.GetKeyDown(binds[2]) && (powers[2, 0] * powers[2, 1]) >= 1 && powerCD[1] <= 0)
+            UpBoost();
 
-        //2 : Up-boost
-        if (Input.GetKeyDown(KeyCode.Alpha2) && (powers[2, 0] * powers[2, 1]) >= 1 && powerCD <= 0)
-        {
-            rb.velocity.Set(rb.velocity.x, 0, rb.velocity.z);
-            rb.velocity += transform.rotation * new Vector3(0, jumpSpeed, 0);
-            powers[2, 1] -= 1;
-            powerCD += 2;
-        }
+        //blink*
+        if (Input.GetKeyDown(binds[3]) && (powers[3, 0] * powers[3, 1]) >= 1 && powerCD[2] <= 0)
+            Blink(false);
+
+        //draw blink indicator
+        else if ((powers[3, 0] * powers[3, 1]) >= 1)
+            Blink(true);
+
+        //don't draw
+        else
+            shadow.position = transform.position;
+
+        //hover*
+        if (Input.GetKeyDown(binds[4]) && (powers[4, 0] * powers[4, 1]) >= 1 && powerCD[3] <= 0)
+            Hover();
+
+        //freeze*
+        if (Input.GetKeyDown(binds[5]) && (powers[5, 0] * powers[5, 1]) >= 1 && powerCD[4] <= 0)
+            Freeze();
+
+        //laser*
+        if (Input.GetKeyDown(binds[6]) && (powers[6, 0] * powers[6, 1]) >= 1 && powerCD[5] <= 0)
+            Laser();
     }
+
+    void Jump()
+    {
+        RaycastHit hit;
+        Ray ray = new Ray(transform.position, Vector3.down);
+        if (Physics.Raycast(ray, out hit, 0.55f))
+            rb.velocity += transform.rotation * new Vector3(0, jumpSpeed, 0);
+    }
+
+    void SideBoost()
+    {
+        velocity.x = velocity.x * 2;
+        velocity.z = velocity.z * 2;
+
+        powers[1, 1] -= 1;
+        powerCD[0] += 2;
+    }
+
+    void UpBoost()
+    {
+        rb.velocity.Set(rb.velocity.x, 0, rb.velocity.z);
+        rb.velocity += transform.rotation * new Vector3(0, jumpSpeed, 0);
+        powers[2, 1] -= 1;
+        powerCD[1] += 2;
+    }
+
+    void Blink(bool drawShadow)
+    {
+        if (!drawShadow)
+        { 
+            transform.position += transform.rotation * new Vector3(0, 0, blinkD);
+            shadow.position = transform.position;
+        }
+        else
+            shadow.position = transform.position + transform.rotation * new Vector3(0, 0, blinkD);
+    }
+
+    void Hover()
+    {
+        rb.velocity.Set(0,0,0);
+        powers[4, 1] -= 1;
+        powerCD[3] += 2;
+    }
+
+    void Freeze()
+    {
+
+        powers[5, 1] -= 1;
+        powerCD[4] += 2;
+    }
+
+    void Laser()
+    {
+
+        powers[6, 1] -= 1;
+        powerCD[5] += 2;
+    }
+
 }
