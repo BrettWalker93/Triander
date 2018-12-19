@@ -8,19 +8,7 @@ public class BindsHandler : MonoBehaviour
     //powerBinds = { jump, side boost, up boost, blink, hover, freeze, laser }
     public string[] powerBinds = new string[7];
     //uiBinds = { blink indicator on/off }
-    public string[] uiBinds = new string[1];
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public string[] hudBinds = new string[1];
 
     void NewBinds()
     {

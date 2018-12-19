@@ -9,15 +9,11 @@ public class PowerHandler : MonoBehaviour
     //trigger message, broadcast when picked up
     public string trigger;
 
-    // Start is called before the first frame update
-    void Start()
-    {   
-        //listens for power collected
-    }
-
     void OnCollisionEnter(Collision col)
     {
         collided = true;
+
+        //broadcasts power collision message, and listens for collected message
         if (col.gameObject.tag == "Player")
         {
             //** player collision animation call
@@ -27,6 +23,7 @@ public class PowerHandler : MonoBehaviour
 
             Messenger.RemoveListener("power collected", powerCollected);
         }
+
         collided = false;
     }
     

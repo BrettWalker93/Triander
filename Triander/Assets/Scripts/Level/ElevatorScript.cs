@@ -36,11 +36,9 @@ public class ElevatorScript : MonoBehaviour
         path = path / path.magnitude;
         if(triggerOn != "")
             Messenger.AddListener<string>(triggerOn, EleCmd);
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
+        //disables updates until trigger
+        enabled = false;
     }
 
     void FixedUpdate()
@@ -60,6 +58,10 @@ public class ElevatorScript : MonoBehaviour
     //receives trigger string and follows command
     public void EleCmd(string a0)
     {
+        //enables script on first trigger
+        if (!enabled)
+            enabled = true;
+
         if (a0 == triggerOn)
         {
             on = true;

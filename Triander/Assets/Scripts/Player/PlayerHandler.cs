@@ -25,7 +25,7 @@ public class PlayerHandler : MonoBehaviour
 
     //holds keybinds
     private string[] binds = new string[7];
-    private string[] uiBinds = new string[1];
+    private string[] hudBinds = new string[1];
 
     //print test
     private int printCount = 0;
@@ -191,7 +191,6 @@ public class PlayerHandler : MonoBehaviour
         //rb.velocity = new Vector3(vSet.x, rb.velocity.y, vSet.z);
     }
 
-
     #endregion
 
     #region PowerUps
@@ -212,7 +211,7 @@ public class PlayerHandler : MonoBehaviour
     void DrawIndicator()
     {
         //turns shadow on and off
-        if(Input.GetKeyDown(uiBinds[0]))
+        if(Input.GetKeyDown(hudBinds[0]))
             drawShadow = !drawShadow;
 
         //draws shadow
@@ -335,7 +334,7 @@ public class PlayerHandler : MonoBehaviour
     {
         BindsHandler bindsHandler = GetComponent<BindsHandler>();
         bindsHandler.powerBinds.CopyTo(binds, 0);
-        bindsHandler.uiBinds.CopyTo(uiBinds, 0);
+        bindsHandler.hudBinds.CopyTo(hudBinds, 0);
         
     }
     #endregion

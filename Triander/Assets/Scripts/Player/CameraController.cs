@@ -5,6 +5,13 @@ using UnityEngine;
 * --fix camera resetting
 * --rotate player with camera
 * tidy up
+* allow zooming
+*       make offset (distance) public
+*       have scroll wheel control distance
+* terrain repositioning
+*       cast ray from camera to player
+*       if ray hits something other than player, change offset (distance) to prevent this
+*       unclamp rotation in RotateUpdate to allow looking up
 */
 public class CameraController : MonoBehaviour
 {
@@ -24,15 +31,11 @@ public class CameraController : MonoBehaviour
     private Quaternion rot;
 
     //holds mouse position
-    private Vector3 mouseS = new Vector3(0,0,0);
-
-    void Start()
-    {
-        //nothing doing
-    }
+    private Vector3 mouseS = Vector3.zero;
 
     void Update()
     {
+        //get input
         if (Input.GetMouseButton(1) && !rocheck)
         { 
             rocheck = true;
@@ -47,14 +50,12 @@ public class CameraController : MonoBehaviour
     void LateUpdate()
     {
         RotateUpdate();
-        //applies rotations
-        transform.position = target.position + rot * new Vector3(0,0,-distance);
-        transform.LookAt(target.position);
-        target.transform.rotation = Quaternion.Euler(target.transform.rotation.x,playerRot,target.transform.rotation.z);
     }
 
+    //calculate rotation according to input
     void RotateUpdate()
     {
+        //calculates new rotation
         if (!Input.GetMouseButton(1))
             rocheck = false;
         else if (rocheck)
@@ -64,17 +65,12 @@ public class CameraController : MonoBehaviour
             //sets rotation based on mouse movement after right clicking
             rot = Quaternion.Euler(Mathf.Clamp(n0,5,85),n1, 0);
             playerRot = n1;
-        }      
-    }
+        }
 
-    public float SendX()
-    {
-        return transform.eulerAngles.x;
-    }
-    
-    public float SendY()
-    {
-        return transform.eulerAngles.y;
+        //applies rotations
+        transform.position = target.position + rot * new Vector3(0, 0, -distance);
+        transform.LookAt(target.position);
+        target.transform.rotation = Quaternion.Euler(target.transform.rotation.x, playerRot, target.transform.rotation.z);
     }
 }
 
