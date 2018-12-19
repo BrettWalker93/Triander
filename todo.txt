@@ -1,0 +1,17 @@
+-Player
+    -implement freeze (invuln)
+    -implement lasers
+
+-Environment
+    -Telporters
+
+-UI
+    -HUD
+        -ability cooldowns & hotkeys
+        -minimap
+    -Menus
+        -changing binds
+        -restart level
+        -save
+        -load
+        -quit
