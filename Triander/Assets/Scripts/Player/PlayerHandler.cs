@@ -18,9 +18,14 @@ public class PlayerHandler : MonoBehaviour
     private int[,] powers = new int[,] { { 0, 0 }, { 0, 0 }, { 0, 0}, { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 5 } };
     private float[] powerCD = new float[] {0, 0, 0, 0, 0, 0, 0};
     private bool[] powerUse = new bool[7];
+    //whether or not to draw blink indicator
+    private bool drawShadow = false;
+    //are you hovering
+    private bool hovering = false;    
 
     //holds keybinds
     private string[] binds = new string[7];
+    private string[] uiBinds = new string[1];
 
     //print test
     private int printCount = 0;
@@ -34,7 +39,7 @@ public class PlayerHandler : MonoBehaviour
     public float jumpSpeed; //jump speed
 
     public float blinkD; //blink distance
-    public Transform shadow;
+    public Transform shadow; //blink indicator
 
     #endregion
 
@@ -72,7 +77,7 @@ public class PlayerHandler : MonoBehaviour
         }
         
         //draws shadow
-        DrawIndicator();    
+        DrawIndicator();
                 
         //print test
         /*
@@ -92,9 +97,15 @@ public class PlayerHandler : MonoBehaviour
         //uses powers based on input from PowerInputCheck
         PowerUse();
 
-        //update RigidBody velocity accordingly
+        //change RigidBody velocity according to updates
         Vector3 vSet = transform.rotation * velocity;
         rb.velocity = new Vector3(vSet.x, rb.velocity.y, vSet.z);
+
+        //hover checker
+        if (powerCD[4] <= 0 && hovering)
+            hovering = false;
+        else if (hovering && rb.velocity.y < 0)
+            rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
     }
    
     //updates player velocity based on input
@@ -200,12 +211,16 @@ public class PlayerHandler : MonoBehaviour
     //draws a shadow **implement selection of different abilities for which to draw indicators**
     void DrawIndicator()
     {
-        if ((powers[3, 0] * powers[3, 1]) >= 1)
+        //turns shadow on and off
+        if(Input.GetKeyDown(uiBinds[0]))
+            drawShadow = !drawShadow;
+
+        //draws shadow
+        if ((powers[3, 0] * powers[3, 1]) >= 1 && drawShadow)
             shadow.position = transform.position + transform.rotation * new Vector3(0, 0, blinkD);
         else
             shadow.position = transform.position;
     }
-
 
     //checks for input if appropriate
     void PowerInputCheck()
@@ -250,13 +265,13 @@ public class PlayerHandler : MonoBehaviour
             Laser();
     }
 
-
     void Jump()
     {
         RaycastHit hit;
         Ray ray = new Ray(transform.position, Vector3.down);
         if (Physics.Raycast(ray, out hit, 0.55f))
             rb.velocity += transform.rotation * new Vector3(0, jumpSpeed, 0);
+        
         powerUse[0] = false;
     }
 
@@ -275,6 +290,7 @@ public class PlayerHandler : MonoBehaviour
         if (rb.velocity.y < 0)
             rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
         rb.velocity += transform.rotation * new Vector3(0, jumpSpeed, 0);
+        
         powers[2, 1] -= 1;
         powerCD[2] += 2;
         powerUse[2] = false;
@@ -283,15 +299,18 @@ public class PlayerHandler : MonoBehaviour
     void Blink()
     {
         transform.position += transform.rotation * new Vector3(0, 0, blinkD);        
+        
         powerCD[3] += 2;
         powerUse[3] = false;
     }
 
     void Hover()
     {
-        rb.velocity.Set(0,0,0);
+        //disallows falling
+        hovering = true;
+
         powers[4, 1] -= 1;
-        powerCD[4] += 2;
+        powerCD[4] += 0.5f;
         powerUse[4] = false;
     }
 
@@ -316,6 +335,8 @@ public class PlayerHandler : MonoBehaviour
     {
         BindsHandler bindsHandler = GetComponent<BindsHandler>();
         bindsHandler.powerBinds.CopyTo(binds, 0);
+        bindsHandler.uiBinds.CopyTo(uiBinds, 0);
+        
     }
     #endregion
 
