@@ -2,6 +2,9 @@
     -implement freeze (invuln)
     -implement lasers
 
+-Environment
+    -Telporters
+
 -UI
     -HUD
         -ability cooldowns & hotkeys
