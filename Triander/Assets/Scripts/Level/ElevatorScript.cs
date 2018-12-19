@@ -83,14 +83,17 @@ public class ElevatorScript : MonoBehaviour
             //stop at the end
             if((t.position - coords[1]).magnitude <= 0.05)
                 going = false;
-            //start at the start
+            //restart at the start
             else if(continuous && (t.position - coords[0]).magnitude <= 0.05)
                 going = true;
         }
-        
+
+        //move
         if(going)
             t.position += path * speed * Time.deltaTime;
-        else if(continuous)
+
+        //reverse direction at the end for continuous elevators
+        else if (continuous) 
             t.position += -1 * path * speed * Time.deltaTime;
     }
 

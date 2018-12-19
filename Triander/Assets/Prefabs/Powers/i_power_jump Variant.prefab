@@ -9,8 +9,13 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1488242093856808, guid: 9056d15ffa41f864d9f81388862b0c03, type: 3}
       propertyPath: m_Name
-      value: i_power_jump
+      value: i_power_jump Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 23931999356272644, guid: 9056d15ffa41f864d9f81388862b0c03,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 610a1484bd3128e4cbdac92c49d7b5ac, type: 2}
     - target: {fileID: 4162113537843890, guid: 9056d15ffa41f864d9f81388862b0c03, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
