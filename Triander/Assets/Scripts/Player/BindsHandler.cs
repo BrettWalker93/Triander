@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NewBehaviourScript : MonoBehaviour
+public class BindsHandler : MonoBehaviour
 {
+    //manipulatable string arrays to store keybinds
+    public string[] powerBinds = new string[7];
+
     // Start is called before the first frame update
     void Start()
     {
@@ -14,5 +17,10 @@ public class NewBehaviourScript : MonoBehaviour
     void Update()
     {
         
+    }
+
+    void NewBinds()
+    {
+        GetComponent<PlayerHandler>().LoadBinds();
     }
 }

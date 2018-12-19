@@ -6,6 +6,9 @@ public class PowerHandler : MonoBehaviour
     public int[] vars = new int[3];
     private bool collided = false;
 
+    //trigger message, broadcast when picked up
+    public string trigger;
+
     // Start is called before the first frame update
     void Start()
     {   
@@ -15,7 +18,7 @@ public class PowerHandler : MonoBehaviour
     void OnCollisionEnter(Collision col)
     {
         collided = true;
-        if(col.gameObject.tag == "Player")
+        if (col.gameObject.tag == "Player")
         {
             //** player collision animation call
             Messenger.AddListener("power collected", powerCollected);
@@ -29,14 +32,14 @@ public class PowerHandler : MonoBehaviour
     
     void powerCollected()
     {   
-        if(collided)
-        {
+        if (collided)
+        {   
+            if(trigger != "")
+                Messenger.Broadcast(trigger, trigger);
+            else
+                print(trigger);
+
             Destroy(gameObject);
         }
-    }
-    
-    // Update is called once per frame
-    void Update()
-    {        
     }
 }

@@ -9,8 +9,28 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1488242093856808, guid: 9056d15ffa41f864d9f81388862b0c03, type: 3}
       propertyPath: m_Name
-      value: i_power_sideboost
+      value: i_power_sideboost Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 6249097328337266034, guid: 9056d15ffa41f864d9f81388862b0c03,
+        type: 3}
+      propertyPath: vars.Array.data[2]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6249097328337266034, guid: 9056d15ffa41f864d9f81388862b0c03,
+        type: 3}
+      propertyPath: vars.Array.data[0]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6249097328337266034, guid: 9056d15ffa41f864d9f81388862b0c03,
+        type: 3}
+      propertyPath: vars.Array.data[1]
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 23931999356272644, guid: 9056d15ffa41f864d9f81388862b0c03,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 62431611843a440448ea02a45b0a8380, type: 2}
     - target: {fileID: 4162113537843890, guid: 9056d15ffa41f864d9f81388862b0c03, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -42,26 +62,6 @@ PrefabInstance:
     - target: {fileID: 4162113537843890, guid: 9056d15ffa41f864d9f81388862b0c03, type: 3}
       propertyPath: m_RootOrder
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 23931999356272644, guid: 9056d15ffa41f864d9f81388862b0c03,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 23fd196fc567cc948994a41c32ea7901, type: 2}
-    - target: {fileID: 6249097328337266034, guid: 9056d15ffa41f864d9f81388862b0c03,
-        type: 3}
-      propertyPath: vars.Array.data[2]
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6249097328337266034, guid: 9056d15ffa41f864d9f81388862b0c03,
-        type: 3}
-      propertyPath: vars.Array.data[0]
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6249097328337266034, guid: 9056d15ffa41f864d9f81388862b0c03,
-        type: 3}
-      propertyPath: vars.Array.data[1]
-      value: 100
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9056d15ffa41f864d9f81388862b0c03, type: 3}

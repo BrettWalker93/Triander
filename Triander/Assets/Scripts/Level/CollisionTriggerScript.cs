@@ -2,15 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InputHandler : MonoBehaviour
+public class CollisionTriggerScript : MonoBehaviour
 {
-    //manipulatable string arrays to store keybinds
-    public string[] powerBinds = new string[7];
-
+    public string trigger;
     // Start is called before the first frame update
     void Start()
     {
-        
     }
 
     // Update is called once per frame
@@ -19,8 +16,11 @@ public class InputHandler : MonoBehaviour
         
     }
 
-    void NewBinds()
+    private void OnCollisionEnter(Collision col)
     {
-        GetComponent<PlayerHandler>().LoadBinds();
+        if (col.gameObject.tag == "Player")
+        {
+            Messenger.Broadcast(trigger, trigger);
+        }
     }
 }
