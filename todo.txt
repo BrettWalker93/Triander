@@ -7,7 +7,7 @@
     -test duplicates and depletions
 
 -Environment
-    -Teleporters
+    -test elevators and teleporters
 
 -UI
     -HUD
