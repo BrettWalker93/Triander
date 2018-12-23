@@ -1,9 +1,13 @@
 -Player
+    -reimplement upboost, blink, hover
     -implement freeze (invuln)
     -implement lasers
 
+-Powers
+    -test duplicates and depletions
+
 -Environment
-    -Telporters
+    -Teleporters
 
 -UI
     -HUD

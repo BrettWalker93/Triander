@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 //** -> add animation calls
-public class PowerHandler : MonoBehaviour
+public class PickUpHandler : MonoBehaviour
 {       
-    //vars = { type, charges, budget cost }
-    public int[] vars = new int[3];
+    //parameters
+    public int cost;
+    public string type;
+
     private bool collided = false;
 
     //trigger message, broadcast when picked up
@@ -17,11 +19,11 @@ public class PowerHandler : MonoBehaviour
         if (col.gameObject.tag == "Player")
         {
             //** player collision animation call
-            Messenger.AddListener("power collected", powerCollected);
+            Messenger.AddListener("pickup collected", powerCollected);
                 
-            Messenger.Broadcast("power collision", vars);
+            Messenger.Broadcast("pickup collision", cost, type);
 
-            Messenger.RemoveListener("power collected", powerCollected);
+            Messenger.RemoveListener("pickup collected", powerCollected);
         }
 
         collided = false;

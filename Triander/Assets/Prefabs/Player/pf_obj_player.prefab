@@ -14,7 +14,9 @@ GameObject:
   - component: {fileID: 135408888666279354}
   - component: {fileID: 54498577461442326}
   - component: {fileID: 5619360806317531832}
-  - component: {fileID: 757508255459572079}
+  - component: {fileID: 299680606944975822}
+  - component: {fileID: 698420131335289495}
+  - component: {fileID: 5324819062753751605}
   m_Layer: 0
   m_Name: pf_obj_player
   m_TagString: Player
@@ -122,12 +124,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b99004d04acd73649b9e6d34ab1e28ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 0
-  a: 0
-  jumpSpeed: 0
-  blinkD: 0
-  shadow: {fileID: 0}
---- !u!114 &757508255459572079
+  im: {fileID: 11400000, guid: 4ebb124aedc37974c803cc11638df972, type: 2}
+--- !u!114 &299680606944975822
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -136,14 +134,35 @@ MonoBehaviour:
   m_GameObject: {fileID: 1371789293789018}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 17a355e1e72e6614bbdcd26abef2c611, type: 3}
+  m_Script: {fileID: 11500000, guid: c6df38a3902973842adf60fef6987139, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  powerBinds:
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  bh: {fileID: 0}
+  im: {fileID: 11400000, guid: 4ebb124aedc37974c803cc11638df972, type: 2}
+  maxSpeed: 12
+  a: 60
+--- !u!114 &698420131335289495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1371789293789018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a54d0a5b9ba13a458602dd148c54c88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5324819062753751605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1371789293789018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9955df3c74cf6bc4f8297694b7fa865b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bh: {fileID: 0}
