@@ -15,6 +15,7 @@ using UnityEngine;
 */
 public class CameraController : MonoBehaviour
 {
+    Rigidbody targetRigidBody;
     public Transform target;
     public Transform camTransform;
     public float sensitivity;    
@@ -32,6 +33,11 @@ public class CameraController : MonoBehaviour
 
     //holds mouse position
     private Vector3 mouseS = Vector3.zero;
+
+    void Start()
+    {
+        targetRigidBody = target.GetComponent<Rigidbody>();
+    }
 
     void Update()
     {
@@ -68,9 +74,9 @@ public class CameraController : MonoBehaviour
         }
 
         //applies rotations
-        transform.position = target.position + rot * new Vector3(0, 0, -distance);
-        transform.LookAt(target.position);
-        target.transform.rotation = Quaternion.Euler(target.transform.rotation.x, playerRot, target.transform.rotation.z);
+        transform.position = targetRigidBody.position + rot * new Vector3(0, 0, -distance);
+        transform.LookAt(targetRigidBody.position);
+        targetRigidBody.transform.rotation = Quaternion.Euler(targetRigidBody.transform.rotation.x, playerRot, targetRigidBody.transform.rotation.z);
     }
 }
 

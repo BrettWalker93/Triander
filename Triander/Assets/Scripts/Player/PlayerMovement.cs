@@ -9,7 +9,7 @@ public class PlayerMovement : MonoBehaviour
     public InputMapper im;
 
     private float magnitude = 0;
-    private Vector3 velocity = Vector3.zero;
+    private Vector3 velocity = new Vector3(0, 0, 0);
 
     //input axes
     private float hAxis;
@@ -18,6 +18,8 @@ public class PlayerMovement : MonoBehaviour
     public float maxSpeed; //maximum speed
     public float a; //acceleration 
 
+    private float boosting = 0;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -25,94 +27,71 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        //input
         hAxis = Input.GetAxis("Horizontal");
         vAxis = Input.GetAxis("Vertical");
+
+        //print(hAxis + "(" + System.Math.Sign(rb.velocity.x) + ") " + vAxis + "(" 
+        //+ System.Math.Sign(rb.velocity.z) + ") v:" + velocity  +" mag: " + magnitude + " rbmag: " + rb.velocity.magnitude);
     }
 
     void FixedUpdate()
     {
         VelocityUpdate();
     }
-   
+
     void VelocityUpdate()
-    {
+    {   
         //Speed updates
         //magnitude of velocity vector on xz plane
-        magnitude = Mathf.Sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
-        float t = Time.fixedDeltaTime;  
+        float t = Time.time;
 
-        //x
-        //slow x if no horizontal input
-        if (hAxis == 0)
-        {   
-            if (System.Math.Abs(velocity.x) < 1)
-                velocity.x = 0;
+        //placeholder
+        velocity = rb.velocity;
+
+        //steal y axis;
+        velocity.y = 0;
+
+        //"friction"
+        if (velocity.magnitude < 0.35)
+            velocity = Vector3.zero;
+        else
+        {
+            velocity.x = 0.97f * velocity.x;
+            velocity.z = 0.97f * velocity.z;
+        }
+    
+        if (velocity.magnitude < maxSpeed)
+        { 
+            //x
+            velocity += transform.right * hAxis * a * t;
+
+            //z
+            velocity += transform.forward * vAxis * a * t;
+        }
+
+        //diagional movement: normalize velocity and reduce magnitude to maxSpeed if exceeding
+        if (velocity.magnitude > maxSpeed)
+        {
+            float ratio = velocity.magnitude / maxSpeed;
+
+            if (boosting <= 0)
+                velocity = new Vector3(velocity.x / ratio, velocity.y, velocity.z / ratio);
             else
-                velocity.x -= System.Math.Sign(velocity.x) * a * t / 2f;
+                boosting -= Time.deltaTime;
         }
         
-        //stop if input opposite to instantaneous velocity
-        else if (System.Math.Sign(hAxis) * System.Math.Sign(velocity.x) == -1)
-            velocity.x = 0;
-        
-        //accelerate, but not beyond maxSpeed
-        else if (hAxis != 0 && magnitude < maxSpeed)
-            velocity.x += System.Math.Sign(hAxis) * a * t;
+        //restore y axis
+        velocity.y = rb.velocity.y;
 
-        //z
-        //slow z if no vertical input
-        if (vAxis == 0)
-        {  
-            if (System.Math.Abs(velocity.z) < 1)
-                velocity.z = 0;
-            else
-                velocity.z -= System.Math.Sign(velocity.z) * a * t / 2f;
-        } 
-   
-        //stop if input opposite to instantaneous velocity
-        else if (System.Math.Sign(vAxis) * System.Math.Sign(velocity.z) == -1)
-            velocity.z = 0;
-
-        //accelerate, but not beyond maxSpeed
-        else if (vAxis != 0 && magnitude < maxSpeed)
-            velocity.z += System.Math.Sign(vAxis) * a * t;
-
-        //allow turning at maxSpeed
-        if (hAxis != 0 && vAxis != 0)
-        {
-            //if horizontal instantaneous speed is greater than vertical instantaneous speed
-            if (Mathf.Abs(velocity.x) > Mathf.Abs(velocity.z))
-            {
-                velocity.x = System.Math.Sign(velocity.x) * Mathf.Sqrt(maxSpeed * maxSpeed / 2f);
-                velocity.z = System.Math.Sign(vAxis) * Mathf.Sqrt(maxSpeed * maxSpeed / 2f);
-            }
-            //if vertical instantaneous speed is greater than horizontal instantaneous speed           
-            else if (Mathf.Abs(velocity.z) > Mathf.Abs(velocity.x))
-            {
-                velocity.z = System.Math.Sign(velocity.z) * Mathf.Sqrt(maxSpeed * maxSpeed / 2f);
-                velocity.x = System.Math.Sign(hAxis) * Mathf.Sqrt(maxSpeed * maxSpeed / 2f);
-            }
-        }
-
-        //return to maxSpeed after boost
-        if (magnitude >= maxSpeed)
-        {
-            if (velocity.x > (Mathf.Sqrt(maxSpeed) / 2f))
-                velocity.x -= System.Math.Sign(velocity.x) * a * t / 4f;
-
-            if (velocity.z > (Mathf.Sqrt(maxSpeed) / 2f))
-                velocity.z -= System.Math.Sign(velocity.z) * a * t / 4f;
-        }
-
-        //update RigidBody velocity accordingly
-        Vector3 vSet = transform.rotation * velocity;
-        rb.velocity = new Vector3(vSet.x, rb.velocity.y, vSet.z);
+        //apply placeholder
+        rb.velocity = velocity;
     }
 
-    public void Boost()
+    public void Boost(float duration)
     {
-        velocity.x += velocity.x;
-        velocity.z += velocity.z;
+        //boosting /
+        boosting = duration;
     }
 
     //might be useful if want to change how input is handled

@@ -45,5 +45,4 @@ public class InputMapper : ScriptableObject
     {
         State = "game";
     }
-
 }

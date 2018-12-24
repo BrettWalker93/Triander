@@ -1,18 +1,22 @@
 -Player
-    -reimplement upboost, blink, hover
+    -reimplement hover
     -implement freeze (invuln)
     -implement lasers
+    -tweak numbers for friction elements
+    -add stop button?
+    -new power: possess shadow?
 
 -Powers
-    -test duplicates and depletions
+    -test depletions
 
 -Environment
     -test elevators and teleporters
 
 -UI
     -HUD
-        -ability cooldowns & hotkeys
+        -ability cooldowns, charges & hotkeys
         -minimap
+	-player status
     -Menus
         -changing binds
         -restart level

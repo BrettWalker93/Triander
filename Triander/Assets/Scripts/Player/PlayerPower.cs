@@ -21,18 +21,19 @@ public class POWER_CLASS_NAME : PlayerPower
         Name = null;
 
         //Cooldown, in seconds, of the power
-        cooldown = 0;
+        Cooldown = 0;
 
         //initial timer for cooldown calculation
-        timer = Time.fixedTime;
+        Timer = Time.fixedTime;
         Use = false;
     }
 
+    //only call or invoke during FixedUpdate
     public override void UsePower(Rigidbody rb)
     {
-        //called during FixedUpdate
         //rb is rigidbody component of object to which the caller is attached (player object)
 
+        //cooldown check
         if (Time.time - Timer > Cooldown)
         { 
             //Power logic goes here
@@ -40,10 +41,12 @@ public class POWER_CLASS_NAME : PlayerPower
             //charge depletion if you need it
             //Charges -= 1;
 
-            //always end with Timer update and set Use to false
+            //always end with Timer update and usually set Use to false
             Timer = Time.time;
             Use = false;
         }
+        else
+            Use = false;
     }
 }
 
@@ -70,7 +73,7 @@ public class PlayerPower : ScriptableObject
 
     public virtual void UsePower(Rigidbody rb)
     {
-        //nothing doing
+        return;
     }
 
     public override bool Equals(object obj)
@@ -96,7 +99,7 @@ public class PlayerPower : ScriptableObject
 
 public class Jump : PlayerPower
 {
-    private float jumpSpeed = 15;
+    private readonly float jumpSpeed = 15;
 
     public Jump()
     {
@@ -114,16 +117,20 @@ public class Jump : PlayerPower
             RaycastHit hit;
             Ray ray = new Ray(rb.transform.position, Vector3.down);
             if (Physics.Raycast(ray, out hit, 0.55f))
-                rb.velocity += rb.transform.rotation * new Vector3(0, jumpSpeed, 0);
+                rb.velocity += new Vector3(0, jumpSpeed, 0);
 
             Timer = Time.fixedTime;
             Use = false;
         }
+        else
+            Use = false;
     }
 }
 
 public class SideBoost : PlayerPower
 {
+    private readonly float duration = 0.1f;
+
     public SideBoost()
     {
         Charges = -1;
@@ -137,12 +144,140 @@ public class SideBoost : PlayerPower
     {
         if (Time.fixedTime - Timer > Cooldown)
         {   
-            rb.GetComponent<PlayerMovement>().Boost();
+            rb.GetComponent<PlayerMovement>().Boost(duration);
             //Charges -= 1;
             Timer = Time.fixedTime;
             Use = false;
         }
+        else
+            Use = false;
     }
 }
 
+public class UpBoost : PlayerPower
+{
+    private readonly float upBoostSpeed = 20;
+    public UpBoost()
+    {       
+        Charges = -1;  
+        Name = "UpBoost";
+        Cooldown = 2f;
+        Timer = Time.fixedTime;
+        Use = false;
+    }
+
+    public override void UsePower(Rigidbody rb)
+    {
+        //called during FixedUpdate
+        //rb is rigidbody component of object to which the caller is attached (player object)
+
+        if (Time.time - Timer > Cooldown)
+        {
+            rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+            rb.velocity += new Vector3(0, upBoostSpeed, 0);
+
+            //charge depletion if you need it
+            //Charges -= 1;
+
+            //always end with Timer update and usually set Use to false
+            Timer = Time.time;
+            Use = false;
+        }
+        else
+            Use = false;
+    }
+}
+
+public class Hover : PlayerPower
+{
+    private readonly float duration = 1f;
+
+    public Hover()
+    {
+        //initial number of charges
+        Charges = -1;
+
+        //For PlayerPowers: name should correspond to a retrievable "Action" in BindsHandler.ActionsK        
+        Name = "Hover";
+
+        //Cooldown, in seconds, of the power
+        Cooldown = 2f;
+
+        //initial timer for cooldown calculation
+        Timer = Time.fixedTime;
+        Use = false;
+    }
+
+    public override void UsePower(Rigidbody rb)
+    {
+        //called during FixedUpdate
+        //rb is rigidbody component of object to which the caller is attached (player object)
+
+        if (Time.time - Timer > Cooldown)
+        {
+            //Power logic goes here
+
+            //charge depletion if you need it
+            //Charges -= 1;
+
+            //always end with Timer update and set Use to false
+            Timer = Time.time;
+        }
+        else
+            Use = false;
+
+        if (Use && Timer + duration < Time.time)
+        {
+            if (rb.velocity.y < 0)
+            {
+                rb.velocity.Set(rb.velocity.x, 0, rb.velocity.z);
+            }
+        }
+        else
+            Use = false;
+    }
+}
+
+public class Blink : PlayerPower
+{
+
+    private readonly float blinkDistance = 20;
+
+    public Blink()
+    {
+        //initial number of charges
+        Charges = -1;
+
+        //For PlayerPowers: name should correspond to a retrievable "Action" in BindsHandler.ActionsK        
+        Name = "Blink";
+
+        //Cooldown, in seconds, of the power
+        Cooldown = 2f;
+
+        //initial timer for cooldown calculation
+        Timer = Time.fixedTime;
+        Use = false;
+    }
+
+    public override void UsePower(Rigidbody rb)
+    {
+        //called during FixedUpdate
+        //rb is rigidbody component of object to which the caller is attached (player object)
+
+        //cooldown check
+        if (Time.time - Timer > Cooldown)
+        {
+            rb.transform.position += rb.transform.rotation * new Vector3(0, 0, blinkDistance);
+
+            //charge depletion if you need it
+            //Charges -= 1;
+
+            //always end with Timer update and usually set Use to false
+            Timer = Time.time;
+            Use = false;
+        }
+        else
+            Use = false;
+    }
+}
 
