@@ -1672,6 +1672,11 @@ PrefabInstance:
       propertyPath: maxSpeed
       value: 12
       objectReference: {fileID: 0}
+    - target: {fileID: 299680606944975822, guid: 30e7b7ac5c040fa4ba902d9956414617,
+        type: 3}
+      propertyPath: setMaxSpeed
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 698420131335289495, guid: 30e7b7ac5c040fa4ba902d9956414617,
         type: 3}
       propertyPath: BudgetTotal

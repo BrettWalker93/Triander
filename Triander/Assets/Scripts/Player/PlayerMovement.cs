@@ -15,7 +15,8 @@ public class PlayerMovement : MonoBehaviour
     private float hAxis;
     private float vAxis;
 
-    public float maxSpeed; //maximum speed
+    public float setMaxSpeed; //maximum speed
+    public float TempMaxSpeed { get; set; }
     public float a; //acceleration 
 
     private float boosting = 0;
@@ -23,6 +24,7 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        TempMaxSpeed = setMaxSpeed;
     }
 
     private void Update()
@@ -31,8 +33,7 @@ public class PlayerMovement : MonoBehaviour
         hAxis = Input.GetAxis("Horizontal");
         vAxis = Input.GetAxis("Vertical");
 
-        //print(hAxis + "(" + System.Math.Sign(rb.velocity.x) + ") " + vAxis + "(" 
-        //+ System.Math.Sign(rb.velocity.z) + ") v:" + velocity  +" mag: " + magnitude + " rbmag: " + rb.velocity.magnitude);
+        print(hAxis + " " + vAxis);
     }
 
     void FixedUpdate()
@@ -49,19 +50,22 @@ public class PlayerMovement : MonoBehaviour
         //placeholder
         velocity = rb.velocity;
 
-        //steal y axis;
-        velocity.y = 0;
-
         //"friction"
-        if (velocity.magnitude < 0.35)
-            velocity = Vector3.zero;
+        if (velocity.y == 0)
+        { 
+          if (hAxis == 0)
+                velocity.x = 0;
+          if (vAxis == 0)
+                velocity.z = 0;  
+        }
         else
         {
             velocity.x = 0.97f * velocity.x;
             velocity.z = 0.97f * velocity.z;
         }
-    
-        if (velocity.magnitude < maxSpeed)
+
+
+        if (velocity.magnitude < TempMaxSpeed)
         { 
             //x
             velocity += transform.right * hAxis * a * t;
@@ -70,15 +74,20 @@ public class PlayerMovement : MonoBehaviour
             velocity += transform.forward * vAxis * a * t;
         }
 
+        //steal y axis;
+        velocity.y = 0;
+
         //diagional movement: normalize velocity and reduce magnitude to maxSpeed if exceeding
-        if (velocity.magnitude > maxSpeed)
+        if (velocity.magnitude > TempMaxSpeed)
         {
-            float ratio = velocity.magnitude / maxSpeed;
 
             if (boosting <= 0)
-                velocity = new Vector3(velocity.x / ratio, velocity.y, velocity.z / ratio);
+                TempMaxSpeed = setMaxSpeed;
             else
                 boosting -= Time.deltaTime;
+
+            float ratio = velocity.magnitude / TempMaxSpeed;
+            velocity = new Vector3(velocity.x / ratio, velocity.y, velocity.z / ratio);
         }
         
         //restore y axis
@@ -92,6 +101,7 @@ public class PlayerMovement : MonoBehaviour
     {
         //boosting /
         boosting = duration;
+        TempMaxSpeed = setMaxSpeed * 1.5f;
     }
 
     //might be useful if want to change how input is handled

@@ -12,8 +12,6 @@ public class PlayerHandler : MonoBehaviour
 {
     public InputMapper im;
 
-    public bool HasShadow { get; set; }
-
     PlayerMovement pm;
 
     PlayerPowerHandler pph;
@@ -22,7 +20,6 @@ public class PlayerHandler : MonoBehaviour
     {
         pph = GetComponent<PlayerPowerHandler>();
         pm = GetComponent<PlayerMovement>();
-        HasShadow = false;
     }
 
     void Update()

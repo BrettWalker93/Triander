@@ -129,7 +129,7 @@ public class Jump : PlayerPower
 
 public class SideBoost : PlayerPower
 {
-    private readonly float duration = 0.1f;
+    private readonly float duration = 0.25f;
 
     public SideBoost()
     {

@@ -51,7 +51,7 @@ public class PlayerPowerHandler : MonoBehaviour
                 print(playerPowers[i].Name);
             }
         }
-        DrawShadow();
+        //DrawShadow();
     }
 
     //replace with something more elegant (enum/switch or Dictionary)
