@@ -130,6 +130,7 @@ public class Jump : PlayerPower
 public class SideBoost : PlayerPower
 {
     private readonly float duration = 0.25f;
+    private readonly float multiplier = 1.75f;
 
     public SideBoost()
     {
@@ -144,7 +145,7 @@ public class SideBoost : PlayerPower
     {
         if (Time.fixedTime - Timer > Cooldown)
         {   
-            rb.GetComponent<PlayerMovement>().Boost(duration);
+            rb.GetComponent<PlayerMovement>().Boost(duration, multiplier);
             //Charges -= 1;
             Timer = Time.fixedTime;
             Use = false;

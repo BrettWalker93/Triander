@@ -51,22 +51,16 @@ public class PlayerMovement : MonoBehaviour
         velocity = rb.velocity;
 
         //"friction"
-        if (velocity.y == 0)
-        { 
-          if (hAxis == 0)
-                velocity.x = 0;
-          if (vAxis == 0)
-                velocity.z = 0;  
-        }
+        if (velocity.magnitude < 0.35)
+            velocity = Vector3.zero;
         else
         {
             velocity.x = 0.97f * velocity.x;
             velocity.z = 0.97f * velocity.z;
         }
 
-
         if (velocity.magnitude < TempMaxSpeed)
-        { 
+        {
             //x
             velocity += transform.right * hAxis * a * t;
 
@@ -97,11 +91,11 @@ public class PlayerMovement : MonoBehaviour
         rb.velocity = velocity;
     }
 
-    public void Boost(float duration)
+    public void Boost(float duration, float multiplier)
     {
         //boosting /
         boosting = duration;
-        TempMaxSpeed = setMaxSpeed * 1.5f;
+        TempMaxSpeed = setMaxSpeed * multiplier;
     }
 
     //might be useful if want to change how input is handled

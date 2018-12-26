@@ -19,17 +19,17 @@ public class PickUpHandler : MonoBehaviour
         if (col.gameObject.tag == "Player")
         {
             //** player collision animation call
-            Messenger.AddListener("pickup collected", powerCollected);
+            Messenger.AddListener("pickup collected", PowerCollected);
                 
             Messenger.Broadcast("pickup collision", cost, type);
 
-            Messenger.RemoveListener("pickup collected", powerCollected);
+            Messenger.RemoveListener("pickup collected", PowerCollected);
         }
 
         collided = false;
     }
     
-    void powerCollected()
+    void PowerCollected()
     {   
         if (collided)
         {   

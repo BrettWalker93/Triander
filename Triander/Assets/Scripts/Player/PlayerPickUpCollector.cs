@@ -29,12 +29,12 @@ public class PlayerPickUpCollector : MonoBehaviour
         //if room in budget, collect power and destroy pick-up
         if (BudgetSpent + pickUpCost <= BudgetTotal)
         {
-            pph.AddPower(pickUpType);
-
-            BudgetSpent += pickUpCost;
-
             //broadcast collection
-            Messenger.Broadcast("pickup collected");
+            if (pph.AddPower(pickUpType))
+            { 
+                Messenger.Broadcast("pickup collected");
+                BudgetSpent += pickUpCost;
+            }
         }
     }
 }

@@ -46,36 +46,41 @@ public class PlayerPowerHandler : MonoBehaviour
                 if (playerPowers[i].Charges == 0)
                 {
                     Destroy(playerPowers[i]);
-                    playerPowers.Remove(playerPowers[i]);
+                    playerPowers[i] = null;
+                    playerPowers.RemoveAt(i);
                 }
-                print(playerPowers[i].Name);
             }
         }
         //DrawShadow();
     }
 
     //replace with something more elegant (enum/switch or Dictionary)
-    public void AddPower(string pickUpType)
+    public bool AddPower(string pickUpType)
     {
-        if (pickUpType == "Jump" && !playerPowers.Contains(new Jump()))
+        if (pickUpType == "Jump" && !HasPower(new Jump()))
         {
             playerPowers.Add(new Jump());
         }
         
-        else if (pickUpType == "SideBoost" && !playerPowers.Contains(new SideBoost()))  
+        else if (pickUpType == "SideBoost" && !HasPower(new SideBoost()))  
         {
             playerPowers.Add(new SideBoost());
         }
 
-        else if (pickUpType == "UpBoost" && !playerPowers.Contains(new UpBoost()))
+        else if (pickUpType == "UpBoost" && !HasPower(new UpBoost()))
         {
             playerPowers.Add(new UpBoost());
         }
 
-        else if (pickUpType == "Blink" && !playerPowers.Contains(new Blink()))
+        else if (pickUpType == "Blink" && !HasPower(new Blink()))
         {
             playerPowers.Add(new Blink());
+            
         }
+        else 
+            return false;
+        
+        return true;
     }
 
     public bool HasPower(object obj)
