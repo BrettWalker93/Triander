@@ -1,5 +1,4 @@
 -Player
-    -reimplement hover
     -implement freeze (invuln)
     -implement lasers
     -tweak numbers for friction elements
@@ -10,7 +9,7 @@
     -test depletions
 
 -Environment
-    -test elevators and teleporters
+    -test teleporters
 
 -UI
     -HUD

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu()]
-
 #region Power Template
 /* TEMPLATE
 public class POWER_CLASS_NAME : PlayerPower
@@ -53,7 +51,7 @@ public class POWER_CLASS_NAME : PlayerPower
 */
 #endregion
 
-public class PlayerPower : ScriptableObject
+public class PlayerPower : Object
 {
     public int Charges { get; set; }
     public string Name { get; set; }
@@ -78,10 +76,14 @@ public class PlayerPower : ScriptableObject
 
     public override bool Equals(object obj)
     {
-        if (obj == null) return false;
-        PlayerPower objAsPlayerPower = obj as PlayerPower;
-        if (objAsPlayerPower == null) return false;
-        else return Equals(objAsPlayerPower);
+        if (obj == null)
+            return false;
+
+        if (!(obj is PlayerPower objAsPlayerPower))
+            return false;
+
+        else
+            return Equals(objAsPlayerPower);
     }
 
     public bool Equals(PlayerPower other)
@@ -112,14 +114,14 @@ public class Jump : PlayerPower
 
     public override void UsePower(Rigidbody rb)
     {
-        if (Time.fixedTime - Timer > Cooldown)   
+        if (Time.time - Timer > Cooldown)   
         { 
             RaycastHit hit;
             Ray ray = new Ray(rb.transform.position, Vector3.down);
             if (Physics.Raycast(ray, out hit, 0.55f))
                 rb.velocity += new Vector3(0, jumpSpeed, 0);
 
-            Timer = Time.fixedTime;
+            Timer = Time.time;
             Use = false;
         }
         else
@@ -143,11 +145,11 @@ public class SideBoost : PlayerPower
 
     public override void UsePower(Rigidbody rb)
     {
-        if (Time.fixedTime - Timer > Cooldown)
+        if (Time.time - Timer > Cooldown)
         {   
             rb.GetComponent<PlayerMovement>().Boost(duration, multiplier);
             //Charges -= 1;
-            Timer = Time.fixedTime;
+            Timer = Time.time;
             Use = false;
         }
         else
@@ -224,14 +226,12 @@ public class Hover : PlayerPower
             //always end with Timer update and set Use to false
             Timer = Time.time;
         }
-        else
-            Use = false;
 
-        if (Use && Timer + duration < Time.time)
+        if (Timer + duration > Time.time)
         {
             if (rb.velocity.y < 0)
             {
-                rb.velocity.Set(rb.velocity.x, 0, rb.velocity.z);
+                rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
             }
         }
         else

@@ -10,8 +10,6 @@ using UnityEngine;
 
 public class PlayerHandler : MonoBehaviour
 {
-    public InputMapper im;
-
     PlayerMovement pm;
 
     PlayerPowerHandler pph;
@@ -20,17 +18,17 @@ public class PlayerHandler : MonoBehaviour
     {
         pph = GetComponent<PlayerPowerHandler>();
         pm = GetComponent<PlayerMovement>();
+        Messenger.AddListener<string>("state change", StateChange);
     }
 
-    void Update()
+    void StateChange(string state)
     {
-        //checks input mapper for state, enables/disables input accordingly
-        if (im.State == "menu")
-        { 
+        if (state == "menu")
+        {
             pm.enabled = false;
             pph.enabled = false;
         }
-        else if (!pph.enabled && im.State == "game")
+        else if (state == "game")
         {
             pm.enabled = true;
             pph.enabled = true;

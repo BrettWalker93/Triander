@@ -49,9 +49,10 @@ public class PlayerPowerHandler : MonoBehaviour
                     playerPowers[i] = null;
                     playerPowers.RemoveAt(i);
                 }
+                //print(Time.time + " " + playerPowers[i].Name);
             }
         }
-        //DrawShadow();
+        DrawShadow();
     }
 
     //replace with something more elegant (enum/switch or Dictionary)
@@ -74,9 +75,14 @@ public class PlayerPowerHandler : MonoBehaviour
 
         else if (pickUpType == "Blink" && !HasPower(new Blink()))
         {
-            playerPowers.Add(new Blink());
-            
+            playerPowers.Add(new Blink());            
         }
+
+        else if (pickUpType == "Hover" && !HasPower(new Hover()))
+        {
+            playerPowers.Add(new Hover());
+        }
+
         else 
             return false;
         

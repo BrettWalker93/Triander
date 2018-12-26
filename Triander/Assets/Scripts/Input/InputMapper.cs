@@ -25,24 +25,25 @@ public class InputMapper : ScriptableObject
         Controller = false;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        StateUpdate();
+        //input logic for state changes goes here
     }
 
     void StateUpdate()
     {
-
+        Messenger.Broadcast("state change", State);
     }
 
     private void EnterMenu()
     {
         State = "menu";
+        StateUpdate();
     }    
 
     private void ExitMenu()
     {
         State = "game";
+        StateUpdate();
     }
 }

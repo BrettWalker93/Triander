@@ -6,8 +6,6 @@ public class PlayerMovement : MonoBehaviour
 {
     Rigidbody rb;
 
-    public InputMapper im;
-
     private float magnitude = 0;
     private Vector3 velocity = new Vector3(0, 0, 0);
 
@@ -27,13 +25,13 @@ public class PlayerMovement : MonoBehaviour
         TempMaxSpeed = setMaxSpeed;
     }
 
-    private void Update()
+    void Update()
     {
         //input
         hAxis = Input.GetAxis("Horizontal");
         vAxis = Input.GetAxis("Vertical");
 
-        print(hAxis + " " + vAxis);
+        //print(hAxis + " " + vAxis);
     }
 
     void FixedUpdate()
