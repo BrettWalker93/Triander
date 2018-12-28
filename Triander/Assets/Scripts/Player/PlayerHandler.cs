@@ -13,25 +13,36 @@ public class PlayerHandler : MonoBehaviour
     PlayerMovement pm;
 
     PlayerPowerHandler pph;
-     
+    
+    public InputMapper im;
+ 
     private void Start()
     {
         pph = GetComponent<PlayerPowerHandler>();
         pm = GetComponent<PlayerMovement>();
-        Messenger.AddListener<string>("state change", StateChange);
+        Messenger.AddListener("state change", StateChange);
     }
 
-    void StateChange(string state)
+    void Update()
     {
-        if (state == "menu")
+        if (Input.GetButtonDown("Cancel"))
         {
-            pm.enabled = false;
-            pph.enabled = false;
+            im.StateUpdate("mainmenu");
+            transform.gameObject.SetActive(true);
         }
-        else if (state == "game")
+    }
+
+    void StateChange()
+    {
+        if (im.State == "game")
         {
             pm.enabled = true;
             pph.enabled = true;
+        }
+        else
+        {
+            pm.enabled = false;
+            pph.enabled = false;
         }
     }
 }

@@ -15,6 +15,8 @@ using UnityEngine;
 */
 public class CameraController : MonoBehaviour
 {
+
+    public InputMapper im;
     Rigidbody targetRigidBody;
     public Transform target;
     public Transform camTransform;
@@ -36,6 +38,7 @@ public class CameraController : MonoBehaviour
 
     void Start()
     {
+        Messenger.AddListener("state change", StateChange);
         targetRigidBody = target.GetComponent<Rigidbody>();
     }
 
@@ -77,6 +80,14 @@ public class CameraController : MonoBehaviour
         transform.position = targetRigidBody.position + rot * new Vector3(0, 0, -distance);
         transform.LookAt(targetRigidBody.position);
         targetRigidBody.transform.rotation = Quaternion.Euler(targetRigidBody.transform.rotation.x, playerRot, targetRigidBody.transform.rotation.z);
+    }
+
+    void StateChange()
+    {
+        if (im.State == "game")
+            enabled = true;
+        else
+            enabled = false;
     }
 }
 

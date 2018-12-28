@@ -22,3 +22,6 @@
         -save
         -load
         -quit
+
+-Messenger
+    -rewrite messenger to use simple c# events
