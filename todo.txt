@@ -3,7 +3,7 @@
     -implement lasers
 
 -Environment
-    -Telporters
+    -Teleporters
 
 -UI
     -HUD
